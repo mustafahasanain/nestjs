@@ -1,6 +1,7 @@
 import { Controller, Get, Query, Param, Body, Post, Put } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UserService } from './user.service';
 
 // @Get('all')          // GET /user/all
 // @Get(':id')          // GET /user/ : id - dynamic segment
@@ -10,20 +11,24 @@ import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('user')
 export class UserController {
+  constructor(private readonly userService: UserService) {}
+
   @Get()
-  getUser(@Query('name') name?: string) {
-    const users = [
-      { id: 1, name: 'John Doe' },
-      { id: 2, name: 'Jane Smith' },
-    ];
+  getUser(@Query('name') name?: string): unknown {
+    return this.userService.findAllUsers(name);
 
-    if (name) {
-      return users.filter((user) =>
-        user.name.toLowerCase().includes(name.toLowerCase()),
-      );
-    }
+    // const users = [
+    //   { id: 1, name: 'John Doe' },
+    //   { id: 2, name: 'Jane Smith' },
+    // ];
 
-    return users;
+    // if (name) {
+    //   return users.filter((user) =>
+    //     user.name.toLowerCase().includes(name.toLowerCase()),
+    //   );
+    // }
+
+    // return users;
   }
 
   @Get(':id')
